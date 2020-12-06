@@ -89,6 +89,11 @@ overflow: hidden;
 	text-align:center;
 }
 
+#callsign > a > img{
+	height:25px; 
+	width:25px;
+}
+
 #personalfrequency
 {
 	position:absolute;
@@ -279,6 +284,22 @@ overflow: hidden;
 }
 
 #div-conf > a > img
+{
+	margin-right:5px;
+	width:25px; 
+	height:25px;
+}
+
+#div-panfft
+{
+	position:absolute;
+	left: 1750px;
+	top:55px;
+	width: 580px;
+	display: none;
+}
+
+#div-panfft > a > img
 {
 	margin-right:5px;
 	width:25px; 

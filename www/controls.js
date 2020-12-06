@@ -1,8 +1,22 @@
+//Mobile detection///////////////////////////////////////////////////////////////////////////
+/* eslint-disable */
+const IS_MOBILE = (function (a) {
+  return (
+	/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i
+	  .test(
+		a.substr(0,4)
+	  )
+  )
+  // @ts-ignore
+})(navigator.userAgent || navigator.vendor || window.opera)
+/* eslint-enable */
+
 //Extra Generals///////////////////////////////////////////////////////////////////////////
 
 function bodyload(){
 	disableSFFC();
 	checkCookie();
+	if(IS_MOBILE)initformobile();
 }
 
 function disableSFFC() { 
@@ -19,6 +33,54 @@ function disableSFFC() {
 	document.body.style.overflow = "hidden";
 		
 }
+
+//Mobiles routines///////////////////////////////////////////////////////////////////////////
+
+	function initformobile(){
+		x = document.getElementById('TX-record');
+		preventLongPressMenu(x);
+		x.addEventListener("touchstart", x.onmousedown);
+		x.addEventListener("touchend", x.onmouseup);
+		
+		x = document.getElementById('canBFFFT_scale_floor');
+		x.addEventListener("touchstart", disableScrolling);
+		x.addEventListener("touchend", enableScrolling);
+		x = document.getElementById('canBFFFT_scale_multhz');
+		x.addEventListener("touchstart", disableScrolling);
+		x.addEventListener("touchend", enableScrolling);
+		x = document.getElementById('canBFFFT_scale_multdb');
+		x.addEventListener("touchstart", disableScrolling);
+		x.addEventListener("touchend", enableScrolling);
+		x = document.getElementById('canBFFFT_scale_start');
+		x.addEventListener("touchstart", disableScrolling);
+		x.addEventListener("touchend", enableScrolling);
+	}
+
+    function absorbEvent_(event) {
+      var e = event || window.event;
+      e.preventDefault && e.preventDefault();
+      e.stopPropagation && e.stopPropagation();
+      e.cancelBubble = true;
+      e.returnValue = false;
+      return false;
+    }
+
+    function preventLongPressMenu(node) {
+      node.ontouchstart = absorbEvent_;
+      node.ontouchmove = absorbEvent_;
+      node.ontouchend = absorbEvent_;
+      node.ontouchcancel = absorbEvent_;
+    }
+	
+	function disableScrolling(){
+    var x=window.scrollX;
+    var y=window.scrollY;
+    window.onscroll=function(){window.scrollTo(x, y);};
+	}
+
+	function enableScrolling(){
+		window.onscroll=function(){};
+	}
 
 //Generals routines///////////////////////////////////////////////////////////////////////////
 var poweron = false;
@@ -51,8 +113,18 @@ function powertogle()
 		poweron = false;
 		button_unlight_all("div-filtershortcut");
 		button_unlight_all("div-mode_menu");
+		document.getElementById("div-panfft").style.display = "none";
+		if (typeof panfft !== 'undefined') {panfft.close();}
 	}
 }
+
+window.addEventListener('beforeunload', function (e) {
+	if(poweron)e.preventDefault();
+    if (typeof panfft !== 'undefined') {
+		panfft.close();
+		e.returnValue = '';
+	}
+});
 
 function check_connected() {
 	setTimeout(function () {
@@ -79,7 +151,7 @@ function AudioRX_start(){
 	document.getElementById("indwsAudioRX").innerHTML='<img src="img/critsgrey.png">wsRX';
 	AudioRX_audiobuffer = [];var lenglitchbuf = 2;
 
-	wsAudioRX = new WebSocket( 'wss://' + window.location.href.split( '/' )[2] + '/audioRX' );
+	wsAudioRX = new WebSocket( 'wss://' + window.location.href.split( '/' )[2] + '/WSaudioRX' );
 	wsAudioRX.binaryType = 'arraybuffer';
 	wsAudioRX.onmessage = appendwsAudioRX;
 	wsAudioRX.onopen = wsAudioRXopen;
@@ -87,14 +159,10 @@ function AudioRX_start(){
 	wsAudioRX.onerror = wsAudioRXerror;
 
 	function appendwsAudioRX( msg ){
-		var buffer = new Float32Array(msg.data);
-		AudioRX_audiobuffer.push(buffer);
-		if(AudioRX_audiobuffer.length>lenglitchbuf){audiobufferready= true;}
-		//console.log(AudioRX_audiobuffer.length);
-		
+		AudioRX_audiobuffer.push(new Float32Array(msg.data));
 	}
 
-	var BUFF_SIZE = 256; // spec allows, yet do not go below 1024 
+	const BUFF_SIZE = 256; // spec allows, yet do not go below 1024 
 	AudioRX_context = new AudioContext({latencyHint: "interactive",sampleRate: AudioRX_sampleRate});
 	AudioRX_gain_node = AudioRX_context.createGain();
 	AudioRX_biquadFilter_node = AudioRX_context.createBiquadFilter();
@@ -105,11 +173,12 @@ function AudioRX_start(){
 	AudioRX_source_node.onaudioprocess = (function() {
 		return function(event) {
 			var synth_buff = event.outputBuffer.getChannelData(0); // mono for now
-			if(audiobufferready){
+			let le = Boolean(AudioRX_audiobuffer.length);
+			if(le){
 				for (var i = 0, buff_size = synth_buff.length; i < buff_size; i++) {
 					synth_buff[i] = AudioRX_audiobuffer[0][i];
 				}
-				if(AudioRX_audiobuffer.length > 1){AudioRX_audiobuffer.shift();}
+				if(le){AudioRX_audiobuffer.shift();}
 			}
 		};
 	}());
@@ -307,7 +376,7 @@ var wsControlTRX = "";
 
 function ControlTRX_start(){
 	document.getElementById("indwsControlTRX").innerHTML='<img src="img/critsgrey.png">wsCtrl';
-	wsControlTRX = new WebSocket( 'wss://' + window.location.href.split( '/' )[2] + '/CTRX' );
+	wsControlTRX = new WebSocket( 'wss://' + window.location.href.split( '/' )[2] + '/WSCTRX' );
 	wsControlTRX.onopen = wsControlTRXopen;
 	wsControlTRX.onclose = wsControlTRXclose;
 	wsControlTRX.onerror = wsControlTRXerror;
@@ -316,18 +385,22 @@ function ControlTRX_start(){
 
 var SignalLevel=0;
 function wsControlTRXcrtol( msg ){
-	console.log(String(msg.data));
 	words = String(msg.data).split(':');
 	if(words[0] == "PONG"){showlatency();}
-	else if(words[0] == "getFreq"){showTRXfreq(words[1]);}
+	else if(words[0] == "getFreq"){showTRXfreq(words[1]);TRXfrequency=parseInt(words[1]);if (typeof panfft !== 'undefined') {panfft.setcenterfrequency(words[1]);}}
 	else if(words[0] == "getMode"){showTRXmode(words[1]);}
 	else if(words[0] == "getSignalLevel"){SignalLevel=words[1];drawRXSmeter();}
+	else if(words[0] == "panfft"){document.getElementById("div-panfft").style.display = "block";}
 }
 
 function ControlTRX_stop()
 {
 	wsControlTRX.close();
 } 
+
+function ControlTRX_getFreq(){
+	if (wsControlTRX.readyState === WebSocket.OPEN) {wsControlTRX.send("getFreq");}
+}
 
 function wsControlTRXopen(){
 	document.getElementById("indwsControlTRX").innerHTML='<img src="img/critsgreen.png">wsCtrl';
@@ -411,8 +484,9 @@ function showTRXfreq(freq){
 	document.getElementById("uhz").innerHTML=freq.substring(8, 9);
 }
 
-function sendTRXfreq(){
-	if (wsControlTRX.readyState === WebSocket.OPEN) {wsControlTRX.send("setFreq:"+get_digit_freq());}
+function sendTRXfreq(freq=0){
+	if(!freq){freq=get_digit_freq();}
+		if (wsControlTRX.readyState === WebSocket.OPEN) {wsControlTRX.send("setFreq:"+freq);}
 }
 
 function sendTRXptt(stat){
@@ -444,32 +518,38 @@ function initRXSmeter(){
 var SP = {0:0,1:25,2:37,3:50,4:62,5:73,6:84,7:98,8:110,9:123,10:144,20:164,30:180,40:202,50:221,60:240};
 var RIG_LEVEL_STRENGTH = {0:-54,1:-48,2:-42,3:-36,4:-30,5:-24,6:-18,7:-12,8:-6,9:0,10:10,20:20,30:30,40:40,50:50,60:60};
 function drawRXSmeter() {
-	db=RIG_LEVEL_STRENGTH[SignalLevel];
-	ctxRXsmeter.beginPath();
-	ctxRXsmeter.lineWidth = 2;
-	ctxRXsmeter.moveTo(SP[SignalLevel], 0);
-	ctxRXsmeter.lineTo(SP[SignalLevel], 50);
-	ctxRXsmeter.clearRect(0, 0, 250, 50);
-	ctxRXsmeter.strokeStyle = '#fffb16';	
-	ctxRXsmeter.stroke();
-	
-	sq=document.getElementById("SQUELCH").value*2.5;
-	ctxRXsmeter.beginPath();
-	ctxRXsmeter.lineWidth = 2;
-	ctxRXsmeter.strokeStyle = '#deded5';
-	ctxRXsmeter.moveTo(sq, 0);
-	ctxRXsmeter.lineTo(sq, 50);
-	ctxRXsmeter.stroke();
-	
-	var res = "S9";
-	if(SignalLevel > 9){
-		res = "S9+" + SignalLevel; 
+	if(typeof(RIG_LEVEL_STRENGTH[SignalLevel])!="undefined"){  
+		ctxRXsmeter.beginPath();
+		ctxRXsmeter.lineWidth = 2;
+		ctxRXsmeter.moveTo(SP[SignalLevel], 0);
+		ctxRXsmeter.lineTo(SP[SignalLevel], 50);
+		ctxRXsmeter.clearRect(0, 0, 250, 50);
+		ctxRXsmeter.strokeStyle = '#fffb16';	
+		ctxRXsmeter.stroke();
+		
+		sq=document.getElementById("SQUELCH").value*2.5;
+		ctxRXsmeter.beginPath();
+		ctxRXsmeter.lineWidth = 2;
+		ctxRXsmeter.strokeStyle = '#deded5';
+		ctxRXsmeter.moveTo(sq, 0);
+		ctxRXsmeter.lineTo(sq, 50);
+		ctxRXsmeter.stroke();
+		
+		var res = "S9";
+		if(SignalLevel > 9){
+			res = "S9+" + SignalLevel; 
+		}
+		else{res = "S" + SignalLevel;}
+		document.getElementById("div-smeterdigitRX").innerHTML=res+" ("+RIG_LEVEL_STRENGTH[SignalLevel]+"dB)";
+		
+		if(SP[SignalLevel]>=sq && !muteRX){AudioRX_SetGAIN();}
+		else{AudioRX_SetGAIN(0);}
 	}
-	else{res = "S" + SignalLevel;}
-	document.getElementById("div-smeterdigitRX").innerHTML=res+" ("+db+"dB)";
-	
-	if(SP[SignalLevel]>=sq && !muteRX){AudioRX_SetGAIN();}
-	else{AudioRX_SetGAIN(0);}
+	else{
+		document.getElementById("div-smeterdigitRX").innerHTML="";
+		ctxRXsmeter.clearRect(0, 0, 250, 50);	
+		ctxRXsmeter.stroke();
+		}
 }
 
 function TXtogle(state="None")
@@ -521,8 +601,10 @@ function getCookie(cname) {
 function checkCookie() {
   var callsign=getCookie("callsign");
   if (callsign != "") {
-    alert("Welcome again " + callsign);
-	document.getElementById("callsign").innerHTML=callsign;
+    alert("Welcome " + callsign);
+	labelcalls = document.getElementById("callsign");
+	labelcalls.innerHTML=callsign;
+	if(getCookie("autha"))labelcalls.innerHTML+='&ensp;<a href="/logout" id="logout"><img src="img/logout.png"></a>';
   } else {
      callsign = prompt("Please enter your Call Sign:","");
      if (callsign != "" && callsign != null) {
@@ -538,7 +620,7 @@ function checkCookie() {
 	get_freqfromcokkies();
 }
 
-function get_freqfromcokkies(){
+function get_freqfromcokkies(itemselected=""){
 	var freqs=getCookie("freqs").replace("//", '/').split("/").sort();
 	var x = document.getElementById("selectpersonalfrequency");
 	var length = x.options.length;
@@ -553,6 +635,7 @@ function get_freqfromcokkies(){
 			mode=freqs[i].split(",")[1]
 			option.text = parseInt(freq)+" in "+mode;
 			option.value = freqs[i];
+			if(option.value == itemselected){option.selected = true;}
 			x.add(option); 
 		}
 	}
@@ -572,9 +655,13 @@ function save_freqtocokkies(){
 	document.getElementById("uhz").innerHTML
 	);
 	var mode=get_actualmode();
-	var freqs=getCookie("freqs").replace("//", '/')+freq.toString()+","+mode+"/";
-	setCookie("freqs", freqs, 180);
-	get_freqfromcokkies();
+	var freqs=getCookie("freqs").replace("//", '/');
+	var val=freq.toString()+","+mode;
+	if(!freqs.includes(val)){
+		freqs = freqs +val+"/";
+		setCookie("freqs", freqs, 180);
+		get_freqfromcokkies(val);
+	}
 }
 
 function delete_freqfromcokkies(){
@@ -1099,7 +1186,7 @@ function AudioTX_start()
 isRecording = false;
 encode = false;
 document.getElementById("indwsAudioTX").innerHTML='<img src="img/critsgrey.png">wsTX';
-wsAudioTX = new WebSocket( 'wss://' + window.location.href.split( '/' )[2] + '/audioTX' );
+wsAudioTX = new WebSocket( 'wss://' + window.location.href.split( '/' )[2] + '/WSaudioTX' );
 wsAudioTX.onopen = appendwsAudioTXOpen;
 wsAudioTX.onerror = appendwsAudioTXError;
 wsAudioTX.onclose = appendwsAudioTXclose;
